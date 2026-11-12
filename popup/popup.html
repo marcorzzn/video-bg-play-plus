@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Background Play Plus</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <img src="../icon.svg" alt="" class="logo" />
+        <div class="brand-text">
+          <h1>Video BG Play Plus</h1>
+          <div class="subtitle" id="mediaTitle">Nessun media rilevato</div>
+        </div>
+      </div>
+      <label class="switch" title="Attiva / Disattiva estensione">
+        <input type="checkbox" id="enabledToggle" aria-label="Attiva estensione" />
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <section class="site-banner" id="siteBanner" style="display: none;">
+      <span id="siteLabel"></span>
+      <button id="siteActionBtn" class="btn-small"></button>
+    </section>
+
+    <section class="card">
+      <div class="section-row">
+        <span class="section-title">Riproduzione</span>
+        <span class="time-badge" id="timeDisplay">--:-- / --:--</span>
+      </div>
+      <div class="transport-grid">
+        <button class="t-btn" id="btnRestart" title="Ricomincia daccapo">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3v10M12.5 3.5 6 8l6.5 4.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <small>Inizio</small>
+        </button>
+        <button class="t-btn" id="btnBack" title="Indietro 5 secondi">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M7.5 4 3 8l4.5 4M13 4 8.5 8 13 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <small>-5s</small>
+        </button>
+        <button class="t-btn primary" id="btnPlayPause" title="Play / Pausa">
+          <svg id="playPauseSvg" viewBox="0 0 16 16" aria-hidden="true"><path id="playPausePath" d="M4.5 3.2 12.5 8l-8 4.8z" fill="currentColor"/></svg>
+          <small id="playPauseLabel">Play</small>
+        </button>
+        <button class="t-btn" id="btnStop" title="Stop e azzera">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" rx="1.5" fill="currentColor"/></svg>
+          <small>Stop</small>
+        </button>
+        <button class="t-btn" id="btnFwd" title="Avanti 5 secondi">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8.5 4 13 8l-4.5 4M3 4l4.5 4L3 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <small>+5s</small>
+        </button>
+        <button class="t-btn" id="btnLoop" title="Ripeti in loop">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.5 2.5 14 5l-2.5 2.5M4.5 13.5 2 11l2.5-2.5M13.5 5H5.5A3 3 0 0 0 2.5 8v.5M2.5 11h8a3 3 0 0 0 3-3v-.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <small>Loop</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-row">
+        <span class="section-title">Velocità &amp; Tonalità</span>
+        <button class="link-pill" id="btnLinkMode"></button>
+      </div>
+
+      <div class="control-group">
+        <div class="control-header">
+          <span>Velocità <strong id="speedValue">1.00x</strong></span>
+          <button class="reset-btn" id="btnResetSpeed">Ripristina</button>
+        </div>
+        <input type="range" id="speedRange" min="0.25" max="4" step="0.01" value="1" />
+        <div class="preset-row" id="speedPresets">
+          <button class="chip" data-speed="0.75">0.75x</button>
+          <button class="chip" data-speed="1">1.0x</button>
+          <button class="chip" data-speed="1.25">1.25x</button>
+          <button class="chip" data-speed="1.5">1.5x</button>
+          <button class="chip" data-speed="2">2.0x</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="control-group">
+        <div class="control-header">
+          <span>Tonalità <strong id="pitchValue">0.0 st</strong></span>
+          <button class="reset-btn" id="btnResetPitch">Ripristina</button>
+        </div>
+        <input type="range" id="pitchRange" min="-24" max="24" step="0.1" value="0" />
+        <div class="preset-row" id="pitchPresets">
+          <button class="chip" data-pitch="-12">-12 st</button>
+          <button class="chip" data-pitch="-5">-5 st</button>
+          <button class="chip" data-pitch="0">0 st</button>
+          <button class="chip" data-pitch="5">+5 st</button>
+          <button class="chip" data-pitch="12">+12 st</button>
+        </div>
+      </div>
+
+      <div class="status-note" id="audioStatusNote"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title" style="margin-bottom: 6px;">Resilienza &amp; Notifica</div>
+
+      <label class="toggle-row">
+        <span>Auto-ripresa su pausa/rete</span>
+        <input type="checkbox" id="chkAutoResume" />
+      </label>
+      <label class="toggle-row">
+        <span>Chiudi avvisi &ldquo;Continua a guardare?&rdquo;</span>
+        <input type="checkbox" id="chkAutoDismiss" />
+      </label>
+      <label class="toggle-row">
+        <span>Keep-Alive sessione audio</span>
+        <input type="checkbox" id="chkKeepAlive" />
+      </label>
+
+      <div class="divider"></div>
+
+      <div class="select-row">
+        <span>Tasti ⏮ / ⏭ notifica</span>
+        <select id="selNotificationMode">
+          <option value="smart">Inizio / Traccia succ.</option>
+          <option value="seek5">-5s / +5s (Seek)</option>
+          <option value="restart_fwd5">Inizio / +5s</option>
+        </select>
+      </div>
+
+      <div class="select-row">
+        <span>Tasto ⏮ (modalità Inizio)</span>
+        <select id="selRestartBehavior">
+          <option value="smart">Smart (Inizio / 2x Prev)</option>
+          <option value="always">Sempre ricomincia</option>
+        </select>
+      </div>
+
+      <div class="select-row">
+        <span>Mini-pillola in pagina</span>
+        <select id="selQuickPill">
+          <option value="auto">Auto (Mobile)</option>
+          <option value="on">Sempre visibile</option>
+          <option value="off">Disattivata</option>
+        </select>
+      </div>
+    </section>
+  </div>
+
+  <script src="../content/core-logic.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

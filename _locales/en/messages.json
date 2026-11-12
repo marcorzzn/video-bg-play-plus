@@ -1,11 +1,10 @@
 {
   "extensionName": {
-    "message": "Video Background Play Fix",
+    "message": "Video Background Play Plus",
     "description": "Name of the extension."
   },
-
   "extensionDescription": {
-    "message": "Play back videos in background even if a page doesn't want you to.",
+    "message": "Resilient background video/audio playback on mobile and desktop with enhanced Media Session controls, loop, speed, and independent or linked pitch shifting.",
     "description": "Description of the extension."
   }
 }

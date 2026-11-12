@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "Video Background Play Plus",
+    "description": "Nome dell'estensione."
+  },
+  "extensionDescription": {
+    "message": "Riproduzione in background resiliente su mobile e desktop con controlli Media Session avanzati, loop, velocità e tonalità collegata o separata.",
+    "description": "Descrizione dell'estensione."
+  }
+}
+
